@@ -3,8 +3,10 @@ const express = require('express')
 const dotenv = require('dotenv').config();
 const mongoose = require('mongoose');
 
+// Files
 const logMiddleware = require('./middleware/logMiddleware');
 const errorMiddleware = require('./middleware/errorMiddleware');
+const weatherRoutes = require('./routes/weatherRouter.js');
 
 // imports
 const app = express();
@@ -18,6 +20,7 @@ app.use(express.json());    // for JSON Parsing
 app.use(logMiddleware);     // for logging 
 
 // routes
+app.use("/weather",weatherRoutes);
 
 // MongoDB connection
 mongoose.connect(MONGO_DB)
