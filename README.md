@@ -82,6 +82,7 @@ weather-alert-24-7/
 ├── README.md              # Project documentation  
 └── LICENSE                # License information  
 
+```
 ---
 
 ## 🌐 API Endpoints  
