@@ -4,8 +4,9 @@ const path = require('path')
 
 const logMiddleware = (req, res, next) => {
     const logMssg = `[${new Date().toISOString()}] ${req.method} ${req.url} \n`;
+    const filePath = path.join(__dirname, '../logs/log.txt');
 
-    fs.appendFile(path.join(__dirname, '../logs/log.txt'), logMssg, (err) =>{
+    fs.appendFile(filePath, logMssg, (err) =>{
         if(err)
         {
             console.error("Failed to write Details to Log.txt File!!!! because of : ", err)
