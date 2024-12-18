@@ -1,4 +1,4 @@
-# 🌤️ WeatherAlert 24/7  
+# 🌤️ DailyWeather 24/7  
 **Automated Weather Notification System**  
 Stay ahead of the weather with **WeatherAlert 24/7**! This Node.js-based application fetches daily weather updates, including temperature and chances of rain, and delivers notifications via **SMS** and **email** every 24 hours.  
 
