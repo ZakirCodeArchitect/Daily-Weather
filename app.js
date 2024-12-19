@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 // Files
 const logMiddleware = require('./middleware/logMiddleware');
 const errorMiddleware = require('./middleware/errorMiddleware');
-const weatherRoutes = require('./routes/weatherRouter.js');
+const weatherRoutes = require('./routes/weatherRouter');
 
 // imports
 const app = express();
