@@ -1,30 +1,51 @@
-const axios = require('axios')
+const axios = require('axios');
+const { error } = require('winston');
 
 const getUpdates = async(req,res) => {
     
-
+    const url = "https://www.7timer.info/bin/astro.php?lon=73.084488&lat=33.738045&ac=0&unit=metric&output=json&tzshift=0";
+    
     try{
-
-        const url = "https://www.7timer.info/bin/astro.php?lon=73.084488&lat=33.738045&ac=0&unit=metric&output=json&tzshift=0";
+        
         
         const urlData = await axios.get(url);
         const data = urlData.data;
 
-        const forecasts = data.dataseries.map((entry) => ({
-            dateTime: new Date(entry.timepoint*3600000).toISOString(),
-            temp: entry.temp2m,
-            rain: entry.prec_type || 'none',
-        }))
+        // Extract relevant information
+        if (data && data.dataseries) {
+            const weatherData = data.dataseries.map( info => ({
+                
+                temperature: info.temp2m,
+                rain: info.prec_type
 
-        // return forecasts;
+            }));
+            data.dataseries.forEach(info => {
+                
+                console.log(`Temperature: ${info.temp2m}°C` );
+                console.log(`Rain: ${info.prec_type} `);
+                console.log('_____________________')
+            })
+            
+            res.json({
+                success:true,
+                message: "Weather Prediction details fetched successfully",
+                data: weatherData
+            })
 
-        res.json({
-            message: "Weather Updated: ",
-            data: forecasts
-        })
-    }catch(err)
+        } else {
+            res.status(404).json({
+                success: false,
+                message: 'No data available in the API.'
+            })
+        }
+        
+    }catch(error)
     {
-        console.log("Failed to get the updated of Weather of Islamabad")
+        res.status(404).json({
+            success: false,
+            message: 'Error fetching weather predictions.',
+            error: error.message,
+        })
     }
 }
 
