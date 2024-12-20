@@ -15,33 +15,34 @@ const getUpdates = async(req,res) => {
         const messageBody = `JSON Data: \n${JSON.stringify(data,null,2)}`;
 
         // Extract relevant information
-        // if (data && data.dataseries) {
-        //     const weatherData = data.dataseries.map( info => ({
+        if (data && data.dataseries) {
+            const weatherData = data.dataseries.map( info => ({
                 
-        //         temperature: info.temp2m,
-        //         rain: info.prec_type
+                temperature: info.temp2m,
+                rain: info.prec_type
 
-        //     }));
-        //     data.dataseries.forEach(info => {
+            }));
+            data.dataseries.forEach(info => {
                 
-        //         console.log(`Temperature: ${info.temp2m}°C` );
-        //         console.log(`Rain: ${info.prec_type} `);
-        //         console.log('_____________________')
-        //     })
+                console.log(`Temperature: ${info.temp2m}°C` );
+                console.log(`Rain: ${info.prec_type} `);
+                console.log('_____________________')
+            })
             
-        //     res.json({
-        //         success:true,
-        //         message: "Weather Prediction details fetched successfully",
-        //         data: weatherData
-        //     })
+            res.json({
+                success:true,
+                message: "Weather Prediction details fetched successfully",
+                data: weatherData
+            })
 
-        // } else {
-        //     res.status(404).json({
-        //         success: false,
-        //         message: 'No data available in the API.'
-        //     })
-        // }
+        } else {
+            res.status(404).json({
+                success: false,
+                message: 'No data available in the API.'
+            })
+        }
 
+        // sending email
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -50,16 +51,42 @@ const getUpdates = async(req,res) => {
             }
         });
 
-        const mailOptions = {
-            from: process.env.SENDER_EMAIL,
-            to: process.env.RECIPIENT_EMAIL,
-            subject: 'JSON Data',
-            text: 'Here is the JSON data',
-            html: `<pre>${JSON.stringify(data,null,2)}</pre>`
-        };
+        if (data && data.dataseries) {
+            const weatherData = data.dataseries.map( info => ({
+                
+                temperature: info.temp2m,
+                rain: info.prec_type
 
-        const info = await transporter.sendMail(mailOptions);
-        console.log(`Email sent : ${info.response}`);
+            }));
+            const mailOptions = {
+                from: process.env.SENDER_EMAIL,
+                to: process.env.RECIPIENT_EMAIL,
+                subject: 'JSON Data',
+                text: 'Here is the JSON data',
+                html: `<pre>${JSON.stringify(weatherData,null,2)}</pre>`
+            };
+
+            const info = await transporter.sendMail(mailOptions);
+            console.log(`Email sent : ${info.response}`);
+        } else {
+            res.status(404).json({
+                success: false,
+                message: 'No data available in the API.'
+            })
+        }
+
+        // const mailOptions = {
+        //     from: process.env.SENDER_EMAIL,
+        //     to: process.env.RECIPIENT_EMAIL,
+        //     subject: 'JSON Data',
+        //     text: 'Here is the JSON data',
+        //     html: `<pre>${JSON.stringify(data,null,2)}</pre>`
+        // };
+
+        // const info = await transporter.sendMail(mailOptions);
+        // console.log(`Email sent : ${info.response}`);
+
+        // sending SMS:
 
         // code: P3VDZRW1QJ2MN3NC7MH2UTBA
         const accountSid = process.env.ACCOUNT_SID;

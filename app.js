@@ -45,6 +45,7 @@ app.listen(PORT, () => {
     fs.appendFile(filePath, serverMessage, (err) => {
         if(err)
         {
+            app.use(errorMiddleware)
             console.error(`ERROR: Failed to write to log File`)
         }
     })
